@@ -1,0 +1,3 @@
+# build output
+*.o
+hw01/tests/test_bits
