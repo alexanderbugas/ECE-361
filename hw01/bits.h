@@ -4,6 +4,10 @@
 #define  WORD_BITS 32
 #define NIBBLE_BITS 4
 
+/*
+Function declarations
+*/
+
 void print_binary(uint32_t x, int width);
 
 uint32_t get_field(uint32_t word, int pos, int width);

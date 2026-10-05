@@ -1,12 +1,19 @@
 # HOMEWORK 1
 
-- choice made to truncate input at 32-bits rather than return void for print_binary function
+## What the library does
+- `bits.c` / `bits.h`: four bit-manipulation functions for 32-bit words. `print_binary` prints the low bits of a value in groups of four. `get_field` reads a field of bits. `set_field` writes a field of bits. `sign_extend` reads a field as a two's complement number.
+- `status.c` / `status.h`: `status_unpack` decodes a 16-bit thermostat status word into a `status_t` struct, using `get_field` and `sign_extend` with named constants for every field position and width.
 
-- chose to make out of range return 0 to be consistent with the return value of all out of bounds or invalid input
+## Build and test
+Run these from `hw01/`:
+- `make` compiles `bits.c` and `status.c` to `bits.o` and `status.o`.
+- `make test` builds `tests/test_bits` from the objects and runs it. It prints PASS or FAIL for each check, then the number of failures, and exits nonzero if any check fails.
+- `make clean` removes the object files and the test program.
 
 ## Design decisions
 
 ### `print_binary`
+- Valid input: `width` 1 to 32.
 - A `width` above 32 is clamped to 32, so all 32 bits print.
 - A `width` of 0 or less prints nothing but the newline.
 - Bits are grouped in fours counted from bit 0, so a partial group appears on the left without padding: `print_binary(0x2C, 6)` prints `10 1100`.
@@ -33,12 +40,3 @@
 - **Pos 31 (width must be 1):** `get_field` returns bit 31 using `word >> 31`, which is legal. Width 2 at pos 31 is out of range and returns 0.
 - **Most negative value:** `sign_extend(0x80, 8)` returns -128 by copying the sign bit into bits 8 to 31. The code never negates, so -128 works even though +128 does not fit in 8 bits. At width 32, `sign_extend(0x80000000, 32)` returns -2147483648.
 
-## What the library does
-- `bits.c` / `bits.h`: four bit-manipulation functions for 32-bit words. `print_binary` prints the low bits of a value in groups of four. `get_field` reads a field of bits. `set_field` writes a field of bits. `sign_extend` reads a field as a two's complement number.
-- `status.c` / `status.h`: `status_unpack` decodes a 16-bit thermostat status word into a `status_t` struct, using `get_field` and `sign_extend` with named constants for every field position and width.
-
-## Build and test
-Run these from `hw01/`:
-- `make` compiles `bits.c` and `status.c` to `bits.o` and `status.o`.
-- `make test` builds `tests/test_bits` from the objects and runs it. It prints PASS or FAIL for each check, then the number of failures, and exits nonzero if any check fails.
-- `make clean` removes the object files and the test program.

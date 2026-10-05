@@ -1,5 +1,9 @@
 #include "status.h"
 
+/*
+Strust status_t is from the status.h file. It breaks down the 32-bit word into individual status fields.
+*/
+
 status_t status_unpack(uint16_t word){
     status_t status;
 
