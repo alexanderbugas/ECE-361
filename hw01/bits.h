@@ -1,8 +1,8 @@
 #ifndef BITS_H
 #define BITS_H
-#include <stdint.h>
 #define  WORD_BITS 32
 #define NIBBLE_BITS 4
+#include <stdint.h>
 
 /*
 Function declarations

@@ -87,7 +87,15 @@
   a comment for each module from `ASSIGNMENT.md` (the user may edit them),
   wrote `project/main.c` (initialize iom361 with 1 switch and 2 LEDs, print
   "Greenhouse vent", return 1 on failure) for the user to review, and wrote
-  `project/Makefile`. `SPEC.md` is left to the user.
+  `project/Makefile`.
+- **First SPEC.md.** The user named the seven events and said what each
+  means. Claude wrote them into `project/SPEC.md` with the given states.
+  Claude pointed out that the user's `WIND_ALARM_ON_120` ("on for 120
+  ticks") did not match rule 3, which ends STORM_LOCK when the alarm has been
+  off for 120 ticks, and that without an "off" event nothing could end the
+  lock. At the user's request, Claude renamed it `WIND_ALARM_OFF_120`. Claude
+  also noted that the wind alarm is an on/off switch with no range, and that
+  the sensor limits the temperature and humidity it can report.
 - **Planning.** Claude summarized the homework into a list of objectives and
   sorted the work into what the user should do to learn it and what is
   tedious enough to hand off.
