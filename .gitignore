@@ -1,3 +1,8 @@
 # build output
 *.o
 hw01/tests/test_bits
+practice/twos/explore
+practice/twos/tests/test_twos
+hw02/readings
+hw02/tests/test_stats
+project/vent

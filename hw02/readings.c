@@ -34,7 +34,7 @@ int   count = 0;
 int   skipped = 0;
 float threshold = 30.0f;
 
-/* largest temperature from index i to the end, recursively */
+/* largest temperature from index i to the end, recursively - STATS */
 float max_temp(int i) {
     if (i == count - 1)
         return temps[i];
@@ -42,7 +42,12 @@ float max_temp(int i) {
     return temps[i] > rest ? temps[i] : rest;
 }
 
+/* MAIN */
+
 int main(int argc, char *argv[]) {
+
+    /* Readings first, count incremented for valid readings */
+
     char line[LINE_LEN];
 
     if (argc > 2) {
@@ -81,6 +86,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+
+/* stats for temp and humidity live in stats*/
     /* temperature: min and mean */
     float tmin = temps[0];
     float tsum = 0.0f;
