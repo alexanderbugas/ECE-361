@@ -1,0 +1,9 @@
+smoke
+steam
+smoke
+open
+
+open
+open
+# warning
+absolutely_not_checking

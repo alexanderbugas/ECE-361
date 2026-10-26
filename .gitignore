@@ -7,3 +7,5 @@ hw02/readings
 hw02/tests/test_stats
 project/vent
 hw03/tests/test_ptr
+hw04/events
+hw04/tests/test_tally
