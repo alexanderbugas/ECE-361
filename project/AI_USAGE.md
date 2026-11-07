@@ -22,6 +22,14 @@
 - **Steps 1 to 4** (at the user's request): the test setup and `make test`,
   the states in `fsm.h`, `bits.[ch]` copied from HW1, and the status word's
   pack and unpack in `fsm.c`, with their tests.
+- **Steps 5 to 7** (at the user's request): `sensor.h` (the HW6 interface),
+  `store.h`, and the sorted-array `store.c` with the sheet's store tests.
+- **Steps 8 and 9** (at the user's request): the events, actions and
+  transition table, `fsm_step`, and the event code with its timers
+  (`fsm_event`, `fsm_tick`), with tests for every cell, every threshold and
+  every silent rule. To check that the tests can fail, Claude broke two
+  things in a scratch copy (the wind before the motor in the priority, and
+  no storm memory) and confirmed the storm tests caught both.
 
 ## What it got wrong
 

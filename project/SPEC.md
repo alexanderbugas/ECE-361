@@ -115,6 +115,9 @@ How the events are produced:
   - **The wind events next, before the climate events.** Rule 3 says the
     alarm closes the vent from any state, so on a hot, stormy tick the vent
     must not start opening.
+  - **When both opening conditions hold** (28.0 °C or more and 85 %RH or
+    more), `COOL_ENABLE` is the one passed on. Both columns have the same
+    cells, so it changes nothing but the name.
   - **The climate events never compete with each other.** "Cool and dry" can
     never hold on the same tick as either opening event (28.0 and 24.0 °C,
     and 85 and 75 %RH, cannot both be met). The two motor events cannot both
@@ -158,11 +161,17 @@ keeps `main.c` tidy. It also means they can be unit-tested, since a test
 program cannot link `main.o` (both have a `main`). `fsm.c` therefore includes
 `sensor.h` (for `reading_t`) and `bits.h` (for the status word).
 
-**The timers and the storm memory are a struct** that `main` owns and passes
-to the event code by pointer, as in HW3. Each test makes a fresh one. It
-holds the motor's start time, the time the alarm last turned off, whether a
-storm is waiting to be locked, and the state seen last tick (to notice the
-state changing into `OPENING` or `CLOSING`).
+**The timers and the storm memory are a struct** (`fsm_timers_t`) that
+`main` owns and passes to the event code by pointer, as in HW3. Each test
+makes a fresh one. It holds the motor's start time, the time the alarm last
+turned off, the alarm bit from the tick before (to see it turn off), and
+whether a storm is waiting to be locked.
+
+**One function runs a tick:** `fsm_tick` updates the alarm memory, gets the
+event by priority (`fsm_event`), steps the state machine (`fsm_step`), and
+starts the motor timer on the same tick that the state changes into
+`OPENING` or `CLOSING`. That is what makes opening from tick 5 end on tick
+25: the event code alone would only see the new state on tick 6.
 
 ## Transition table
 

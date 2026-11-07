@@ -9,16 +9,91 @@
 #define FSM_H
 
 #include <stdint.h>     /* uint32_t, for the status word */
+#include <time.h>       /* time_t, for the timers */
+#include "sensor.h"     /* reading_t */
 
 /* the five states given by the project sheet; N_STATES counts them */
 typedef enum { CLOSED, OPENING, OPEN, CLOSING, STORM_LOCK, N_STATES } state_t;
 
+/* the events (SPEC.md, "Events"); N_EVENTS counts them */
+typedef enum {
+    E_COOL_ENABLE,          /* at or above 28.0 C */
+    E_HUMID_TRIGGER_HI,     /* at or above 85 %RH */
+    E_COOL_DRY,             /* at or below 24.0 C and at or below 75 %RH */
+    E_MOTOR_OPEN_20,        /* OPENING, and the motor has run 20 ticks */
+    E_MOTOR_CLOSE_20,       /* CLOSING, and the motor has run 20 ticks */
+    E_WIND_ALARM_ON,        /* the alarm is on, or a storm is not locked yet */
+    E_WIND_ALARM_OFF_120,   /* STORM_LOCK, and the alarm off for 120 ticks */
+    N_EVENTS
+} event_t;
+
+/* the actions: markers for the trace and the history stack. A_UNDEFINED is 0,
+   so a cell left out of the table can be found (as in HW5). */
+typedef enum {
+    A_UNDEFINED, A_NONE, A_START_OPEN, A_START_CLOSE, A_STOP, A_STORM, A_STORM_CLEAR,
+    N_ACTIONS
+} action_t;
+
+/* one cell of the transition table */
+typedef struct { state_t next; action_t action; } transition_t;
+
+/* the transition table: fsm_table[state][event] = { next state, action } */
+extern const transition_t fsm_table[N_STATES][N_EVENTS];
+
 /*
- * state_name: the name of a state, for the trace
- * Takes:   s, a state
- * Returns: "CLOSED", "OPENING", ..., or "?" if s is out of range
+ * state_name, event_name, action_name: names for the trace
+ * Returns: the name without its E_ or A_ prefix, or "?" if out of range
  */
 const char *state_name(state_t s);
+const char *event_name(event_t e);
+const char *action_name(action_t a);
+
+/*
+ * fsm_step: looks up fsm_table[s][e]
+ * Takes:   s, the current state; e, an event; action, where to write the
+ *          action
+ * Returns: the next state, with the action in *action. If s or e is out of
+ *          range: s, with A_UNDEFINED in *action.
+ * Assumes: action is not NULL
+ */
+state_t fsm_step(state_t s, event_t e, action_t *action);
+
+/* what the event code remembers between ticks (SPEC.md, "Events") */
+typedef struct {
+    time_t motor_start;     /* when the state last changed into OPENING or CLOSING */
+    time_t alarm_off_since; /* when the alarm last turned off */
+    int alarm_was_on;       /* the alarm bit on the tick before */
+    int storm_pending;      /* 1 from an alarm until the vent is locked */
+} fsm_timers_t;
+
+/*
+ * fsm_timers_init: a fresh set of timers for a run that starts at now
+ * Assumes: tm is not NULL
+ */
+void fsm_timers_init(fsm_timers_t *tm, time_t now);
+
+/*
+ * fsm_event: the one event for this tick, chosen by priority (motor, wind,
+ * climate), or -1 if there is none. Reads the timers, changes nothing.
+ * Takes:   tm, the timers; s, the current state; r, this tick's reading;
+ *          switches, this tick's SWITCHES_REG (bit 0 is WIND_ALARM)
+ * Returns: an event_t, or -1
+ * Assumes: tm and r are not NULL, and fsm_tick keeps tm up to date
+ */
+int fsm_event(const fsm_timers_t *tm, state_t s, const reading_t *r, uint32_t switches);
+
+/*
+ * fsm_tick: one tick of the device: updates the alarm memory, gets the event,
+ * steps the state machine, and starts the motor timer on the tick the state
+ * changes into OPENING or CLOSING
+ * Takes:   tm, the timers; s, the current state; r, this tick's reading;
+ *          switches, this tick's SWITCHES_REG; event, where to write the event
+ *          (or -1), or NULL; action, where to write the action
+ * Returns: the next state. With no event: s, and A_NONE in *action.
+ * Assumes: tm, r and action are not NULL
+ */
+state_t fsm_tick(fsm_timers_t *tm, state_t s, const reading_t *r, uint32_t switches,
+                 int *event, action_t *action);
 
 /* status word field positions and widths (SPEC.md, "Status word") */
 #define STATUS_FLAG_WIDTH       1

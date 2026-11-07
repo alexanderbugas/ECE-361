@@ -8,9 +8,11 @@
 
 void test_fsm(void);    /* tests/test_fsm.c */
 void test_bits(void);   /* tests/test_bits.c */
+void test_store(void);  /* tests/test_store.c */
 
 int main(void) {
     test_fsm();
     test_bits();
+    test_store();
     return check_report();
 }

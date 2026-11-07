@@ -20,11 +20,11 @@ planned yet.*
 | 2   | `fsm.h`: states and `state_name`                      | 3    | **complete** |                                  |
 | 3   | `bits.[ch]`, copied from HW1                          | 3    | **complete** |                                  |
 | 4   | the status word: pack and unpack                      | 3    | **complete** |                                  |
-| 5   | `sensor.h`: `reading_t`, `sensor_read`                | 3, 4 | not done     |                                  |
-| 6   | `store.h`: `record_t`, the interface                  | 3, 4 | not done     |                                  |
-| 7   | `store.c`: sorted array                               | 4    | not done     |                                  |
-| 8   | `fsm.h` / `fsm.c`: events, actions, table, `fsm_step` | 5    | not done     |                                  |
-| 9   | the event code and its timers                         | 5    | not done     |                                  |
+| 5   | `sensor.h`: `reading_t`, `sensor_read`                | 3, 4 | **complete** |                                  |
+| 6   | `store.h`: `record_t`, the interface                  | 3, 4 | **complete** |                                  |
+| 7   | `store.c`: sorted array                               | 4    | **complete** |                                  |
+| 8   | `fsm.h` / `fsm.c`: events, actions, table, `fsm_step` | 5    | **complete** |                                  |
+| 9   | the event code and its timers                         | 5    | **complete** |                                  |
 | 10  | `sensor.c`                                            | 6    | not done     | HW6 Part 1 (copied from `hw06/`) |
 | 11  | `scenario.[ch]`                                       | 6    | not done     | HW6 Part 3 (copied from `hw06/`) |
 | 12  | the clock, in `scenario.c`                            | 6    | not done     | HW6 (copied from `hw06/`)        |
