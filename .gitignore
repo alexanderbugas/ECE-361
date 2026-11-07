@@ -6,6 +6,7 @@ practice/twos/tests/test_twos
 hw02/readings
 hw02/tests/test_stats
 project/vent
+project/tests/test_all
 hw03/tests/test_ptr
 hw04/events
 hw04/tests/test_tally
