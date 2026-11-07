@@ -39,9 +39,10 @@ iom361_r4.o: iom361_r4.c iom361_r4.h
 $(TEST): $(TEST_SRCS) $(TEST_HDRS)
 	$(CC) $(CFLAGS) $(SAN) -I. -o $@ $(TEST_SRCS) $(LDLIBS)
 
-# make test builds and runs every test; it fails if any test fails
-test: $(TEST)
-	./$(TEST)
+# make test builds vent and the unit tests, then runs regress.sh: the unit
+# tests, then every scenario, ending with one passed/failed line
+test: $(PROG) $(TEST)
+	sh regress.sh
 
 clean:
 	rm -f $(PROG) $(OBJS) $(TEST)

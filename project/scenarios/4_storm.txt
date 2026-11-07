@@ -1,0 +1,12 @@
+# Scenario 4, rule 3: a storm closes the open vent and locks it; the alarm
+# goes off, comes back within the 120 ticks (the count starts over), goes off
+# again, and 120 ticks later the lock ends and the vent opens again.
+start 1791273600            # 2026-10-06 08:00:00 UTC
+# tick  temp  rh   switches
+0       30.0  50   0x0      # too hot: OPENING from 0, OPEN on 20
+25      30.0  50   0x1      # storm: CLOSING from 25, CLOSED on 45, STORM_LOCK on 46
+60      30.0  50   0x0      # the alarm turns off: the 120 ticks start
+100     30.0  50   0x1      # back on within the 120 ticks
+105     30.0  50   0x0      # off again: the 120 ticks start over
+225     30.0  50   0x0      # 120 ticks after 105: CLOSED; still hot: OPENING on 226, OPEN on 246
+250     30.0  50   0x0

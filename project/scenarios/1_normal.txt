@@ -1,0 +1,8 @@
+# Scenario 1, normal operation: the greenhouse warms to 28.0 C and the vent
+# opens; it cools to 24.0 C and the vent closes.
+start 1791273600            # 2026-10-06 08:00:00 UTC
+# tick  temp  rh   switches
+0       26.0  70   0x0      # between the thresholds: stays CLOSED
+5       28.0  70   0x0      # too hot: OPENING from tick 5, OPEN on tick 25
+40      24.0  70   0x0      # cool and dry: CLOSING from tick 40, CLOSED on tick 60
+65      24.0  70   0x0

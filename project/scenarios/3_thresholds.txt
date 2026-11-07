@@ -1,0 +1,13 @@
+# Scenario 3, thresholds: every threshold set to exactly its value, next to a
+# value just on the other side. The rules say "at or above" and "at or below",
+# so the exact value always triggers.
+start 1791273600            # 2026-10-06 08:00:00 UTC
+# tick  temp  rh    switches
+0       27.9  50.0  0x0     # just below 28.0: stays CLOSED
+2       28.0  50.0  0x0     # exactly 28.0: OPENING from tick 2, OPEN on tick 22
+25      24.1  75.0  0x0     # just above 24.0: stays OPEN
+27      24.0  75.1  0x0     # 24.0, but just above 75 %RH: stays OPEN
+29      24.0  75.0  0x0     # exactly 24.0 and 75 %RH: CLOSING from 29, CLOSED on 49
+52      20.0  84.9  0x0     # just below 85 %RH: stays CLOSED
+54      20.0  85.0  0x0     # exactly 85 %RH: OPENING from 54, OPEN on 74
+76      20.0  85.0  0x0

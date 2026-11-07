@@ -29,7 +29,7 @@ planned yet.*
 | 11  | `scenario.[ch]`                                       | 6    | **complete** |                       |
 | 12  | the clock, in `scenario.c`                            | 6    | **complete** |                       |
 | 13  | `main.c`: replay, trace, LEDs, RGB                    | 6    | **complete** |                       |
-| 14  | scenarios 1, 3, 4, 5, 7 and `regress.sh`              | 5, 6 | not done     | steps 1–13            |
+| 14  | scenarios 1, 3, 4, 5, 7 and `regress.sh`              | 5, 6 | **complete** |                       |
 | 15  | `AI_USAGE.md` for the project                         | all  | in progress  |                       |
 
 ## The plan, one step at a time

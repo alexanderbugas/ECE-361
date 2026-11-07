@@ -36,6 +36,12 @@
   `fsm_leds` and the color table to `fsm.c`, and the sensor, scenario and
   clock tests. Ran `./vent` on the sheet's example scenario and on a full
   open-and-close cycle to check the trace.
+- **Step 14** (at the user's request): wrote the sheet's scenarios 1, 3, 4, 5
+  and 7. Before saving the expected traces, Claude worked out the state at
+  70 key ticks by hand from the rules and checked `./vent`'s output against
+  them (no mismatches). Wrote `regress.sh` so that `make test` ends with one
+  passed/failed line for the unit tests and scenarios together, and checked
+  that a wrong expected trace makes `make test` fail.
 
 ## What it got wrong
 

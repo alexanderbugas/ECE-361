@@ -1,0 +1,15 @@
+# Scenario 5, unexpected input: the WIND_ALARM switch changes at least once
+# in every state, including a gust that ends before the storm closing is done.
+start 1791273600            # 2026-10-06 08:00:00 UTC
+# tick  temp  rh   switches
+0       25.0  60   0x0      # CLOSED
+2       25.0  60   0x1      # on while CLOSED: STORM_LOCK at once (silent rule 8)
+3       25.0  60   0x0      # off while STORM_LOCK: unlocked on 123
+125     30.0  60   0x0      # too hot: OPENING from 125
+130     30.0  60   0x1      # on while OPENING: CLOSING from 130 (silent rule 4)
+135     30.0  60   0x0      # off while CLOSING: the storm is remembered:
+                            # CLOSED on 150, STORM_LOCK on 151, unlocked on 255
+256     30.0  60   0x0      # still hot: OPENING from 256, OPEN on 276
+280     30.0  60   0x1      # on while OPEN: CLOSING from 280, CLOSED on 300, STORM_LOCK on 301
+290     30.0  60   0x0      # off: unlocked on 410, OPENING on 411
+412     30.0  60   0x0

@@ -12,7 +12,7 @@ Run these from `project/`:
 
 ```bash
 make            # builds vent with gcc -std=c11 -Wall -Wextra -g
-make test       # builds and runs every unit test, with the sanitizers
+make test       # the unit tests (with the sanitizers), then every scenario
 make clean      # removes everything make built
 ./vent scenarios/NAME.txt   # replays a scenario: one trace line per tick
 ```
@@ -33,6 +33,25 @@ A trace line looks like the sheet's example:
 - The tests are built straight from the sources with
   `-fsanitize=address,undefined`, as the sheet requires, so they never share
   an object file with `vent`.
+- `regress.sh` runs the unit tests, then `./vent` on every scenario in
+  `scenarios/`, comparing each trace with the file of the same name in
+  `expected/` (as in HW2 and HW6). It ends with the one line the sheet asks
+  for: the number passed and failed, unit tests and scenarios together.
+
+### The scenarios
+
+*Written by Claude. Each expected trace was checked against states worked
+out by hand from the rules before it was saved.*
+
+| Scenario           | The sheet's | What it shows                                                                                                                                      |
+| ------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `1_normal.txt`     | 1           | warms to 28.0 C and opens (OPEN 20 ticks later), cools to 24.0 C and closes                                                                        |
+| `3_thresholds.txt` | 3           | each threshold at exactly its value triggers; 27.9 C, 24.1 C, 75.1 %RH and 84.9 %RH do not                                                         |
+| `4_storm.txt`      | 4           | a storm closes the open vent and locks it; the alarm comes back within 120 ticks, so the count starts over; the lock ends and the vent opens again |
+| `5_unexpected.txt` | 5           | the switch changes in every state, including a gust that ends before the storm closing is done (the vent still locks)                              |
+| `7_midnight.txt`   | 7           | starts at 23:59:40; the date changes at tick 20 while the vent is opening                                                                          |
+
+Scenarios 2 (the stack grows, week 7) and 6 (the report, week 9) come later.
 
 ## How the program fits together
 
