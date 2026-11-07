@@ -95,6 +95,24 @@ int fsm_event(const fsm_timers_t *tm, state_t s, const reading_t *r, uint32_t sw
 state_t fsm_tick(fsm_timers_t *tm, state_t s, const reading_t *r, uint32_t switches,
                  int *event, action_t *action);
 
+/* the outputs, set from the state every tick (SPEC.md, "Inputs and outputs") */
+#define LED_MOTOR_OPEN   0x1u       /* bit 0 of LEDS_REG */
+#define LED_MOTOR_CLOSE  0x2u       /* bit 1 of LEDS_REG */
+
+/* one RGB color: the duty cycles build_rgb_reg takes, 0 to 255 */
+typedef struct { uint8_t red; uint8_t green; uint8_t blue; } rgb_t;
+
+/* the color of each state (SPEC.md): CLOSED green, OPENING orange, OPEN red,
+   CLOSING yellow, STORM_LOCK black */
+extern const rgb_t fsm_rgb[N_STATES];
+
+/*
+ * fsm_leds: the LEDS_REG value for a state
+ * Returns: LED_MOTOR_OPEN while OPENING, LED_MOTOR_CLOSE while CLOSING,
+ *          0 in every other state (and for a state out of range)
+ */
+uint32_t fsm_leds(state_t s);
+
 /* status word field positions and widths (SPEC.md, "Status word") */
 #define STATUS_FLAG_WIDTH       1
 #define STATUS_MOTOR_OPEN_POS   0       /* same bit as MOTOR_OPEN in LEDS_REG */

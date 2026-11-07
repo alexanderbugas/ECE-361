@@ -226,6 +226,25 @@ state_t fsm_tick(fsm_timers_t *tm, state_t s, const reading_t *r, uint32_t switc
     return next;
 }
 
+const rgb_t fsm_rgb[N_STATES] = {
+    [CLOSED]     = {   0, 255,   0 },   /* green */
+    [OPENING]    = { 255, 128,   0 },   /* orange */
+    [OPEN]       = { 255,   0,   0 },   /* red */
+    [CLOSING]    = { 255, 255,   0 },   /* yellow */
+    [STORM_LOCK] = {   0,   0,   0 },   /* black */
+};
+
+/* the motor LEDs follow the state: on while that motor runs */
+uint32_t fsm_leds(state_t s) {
+    if (s == OPENING) {
+        return LED_MOTOR_OPEN;
+    }
+    if (s == CLOSING) {
+        return LED_MOTOR_CLOSE;
+    }
+    return 0;
+}
+
 /* one set_field per field, starting from 0 so unused bits stay 0 */
 uint32_t status_pack(state_t s, int motor_open, int motor_close, int wind) {
     uint32_t word = 0;

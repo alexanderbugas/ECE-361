@@ -14,7 +14,12 @@ Run these from `project/`:
 make            # builds vent with gcc -std=c11 -Wall -Wextra -g
 make test       # builds and runs every unit test, with the sanitizers
 make clean      # removes everything make built
+./vent scenarios/NAME.txt   # replays a scenario: one trace line per tick
 ```
+
+A trace line looks like the sheet's example:
+`2026-10-06 08:00:46 state=OPENING temp=26.0 rh=70.0 leds=0x1 status=0x00000011`.
+`--report` is accepted but not written yet (week 9): it says so and exits 1.
 
 *The test setup was written by Claude at the user's request.*
 
@@ -180,6 +185,12 @@ in quotes are the user's own words.
 | `fsm_step` with a value out of range                             | stays in the same state, with `A_UNDEFINED`                                                                          | Claude                                    | the table has no such cell, so reading it would go past the array                                                                                                                                                     |
 | Both opening conditions at once                                  | `COOL_ENABLE` is passed on                                                                                           | Claude                                    | the two columns are the same, so only the name changes                                                                                                                                                                |
 | Names in code                                                    | `E_` and `A_` prefixes, as in HW5; the trace prints the names without them                                           | Claude                                    | the HW5 convention                                                                                                                                                                                                    |
+| `sensor.c`, `scenario.[ch]` and the loop                         | copied from `hw06/`                                                                                                  | the user's plan                           | the HW6 handout's "next step"                                                                                                                                                                                         |
+| The LED and RGB mapping                                          | `fsm_leds` and the `fsm_rgb` table in `fsm.c`; `main` passes the colors to `build_rgb_reg`                           | Claude                                    | in `fsm.c` they can be unit-tested, and `fsm.c` still does not need iom361                                                                                                                                            |
+| Writing the LEDs                                                 | a plain write of the whole `LEDS_REG`, not HW6's `panel_led`                                                         | Claude                                    | both LEDs belong to the vent and are set from the state every tick, so there are no other bits to keep                                                                                                                |
+| The wind bit of the status word                                  | the `WIND_ALARM` switch itself, not the remembered storm                                                             | Claude                                    | the sheet's field is "wind alarm"                                                                                                                                                                                     |
+| A full store                                                     | `main` warns once on `stderr` and goes on; the trace is not affected                                                 | Claude                                    | the user: "we'll fix it later. no malloc yet"                                                                                                                                                                         |
+| `sensor_read` failing in `vent`                                  | stop, as HW6's H4                                                                                                    | Claude, carried over from HW6             | the user chose it for HW6                                                                                                                                                                                             |
 
 ## Open questions
 

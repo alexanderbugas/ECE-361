@@ -11,26 +11,26 @@ planned yet.*
 
 ## Status
 
-| #   | Module or file                                        | Week | Status       | Waits for                        |
-| --- | ----------------------------------------------------- | ---- | ------------ | -------------------------------- |
-| —   | `ASSIGNMENT.md`, iom361 files, stubs                  | 2    | **complete** |                                  |
-| —   | `Makefile` (builds `vent`)                            | 2    | **complete** |                                  |
-| —   | `SPEC.md`, `README.md`                                | all  | in progress  | updated at every step            |
-| 1   | `tests/` and `make test`                              | 3    | **complete** |                                  |
-| 2   | `fsm.h`: states and `state_name`                      | 3    | **complete** |                                  |
-| 3   | `bits.[ch]`, copied from HW1                          | 3    | **complete** |                                  |
-| 4   | the status word: pack and unpack                      | 3    | **complete** |                                  |
-| 5   | `sensor.h`: `reading_t`, `sensor_read`                | 3, 4 | **complete** |                                  |
-| 6   | `store.h`: `record_t`, the interface                  | 3, 4 | **complete** |                                  |
-| 7   | `store.c`: sorted array                               | 4    | **complete** |                                  |
-| 8   | `fsm.h` / `fsm.c`: events, actions, table, `fsm_step` | 5    | **complete** |                                  |
-| 9   | the event code and its timers                         | 5    | **complete** |                                  |
-| 10  | `sensor.c`                                            | 6    | not done     | HW6 Part 1 (copied from `hw06/`) |
-| 11  | `scenario.[ch]`                                       | 6    | not done     | HW6 Part 3 (copied from `hw06/`) |
-| 12  | the clock, in `scenario.c`                            | 6    | not done     | HW6 (copied from `hw06/`)        |
-| 13  | `main.c`: replay, trace, LEDs, RGB                    | 6    | not done     | HW6 Part 3; steps 1–12           |
-| 14  | scenarios 1, 3, 4, 5, 7 and `regress.sh`              | 5, 6 | not done     | steps 1–13                       |
-| 15  | `AI_USAGE.md` for the project                         | all  | in progress  |                                  |
+| #   | Module or file                                        | Week | Status       | Waits for             |
+| --- | ----------------------------------------------------- | ---- | ------------ | --------------------- |
+| —   | `ASSIGNMENT.md`, iom361 files, stubs                  | 2    | **complete** |                       |
+| —   | `Makefile` (builds `vent`)                            | 2    | **complete** |                       |
+| —   | `SPEC.md`, `README.md`                                | all  | in progress  | updated at every step |
+| 1   | `tests/` and `make test`                              | 3    | **complete** |                       |
+| 2   | `fsm.h`: states and `state_name`                      | 3    | **complete** |                       |
+| 3   | `bits.[ch]`, copied from HW1                          | 3    | **complete** |                       |
+| 4   | the status word: pack and unpack                      | 3    | **complete** |                       |
+| 5   | `sensor.h`: `reading_t`, `sensor_read`                | 3, 4 | **complete** |                       |
+| 6   | `store.h`: `record_t`, the interface                  | 3, 4 | **complete** |                       |
+| 7   | `store.c`: sorted array                               | 4    | **complete** |                       |
+| 8   | `fsm.h` / `fsm.c`: events, actions, table, `fsm_step` | 5    | **complete** |                       |
+| 9   | the event code and its timers                         | 5    | **complete** |                       |
+| 10  | `sensor.c`                                            | 6    | **complete** |                       |
+| 11  | `scenario.[ch]`                                       | 6    | **complete** |                       |
+| 12  | the clock, in `scenario.c`                            | 6    | **complete** |                       |
+| 13  | `main.c`: replay, trace, LEDs, RGB                    | 6    | **complete** |                       |
+| 14  | scenarios 1, 3, 4, 5, 7 and `regress.sh`              | 5, 6 | not done     | steps 1–13            |
+| 15  | `AI_USAGE.md` for the project                         | all  | in progress  |                       |
 
 ## The plan, one step at a time
 

@@ -251,7 +251,31 @@ static void test_storm(void) {
     check(run(180, 180, 20.0f, 50.0f, 0) == CLOSED, "storm: the count started over at tick 60");
 }
 
+/*
+ * The outputs from the state: the motor LEDs and the RGB color (SPEC.md)
+ */
+static void test_outputs(void) {
+    check(fsm_leds(OPENING) == 0x1u && fsm_leds(CLOSING) == 0x2u, "outputs: MOTOR_OPEN while OPENING, MOTOR_CLOSE while CLOSING");
+    check(fsm_leds(CLOSED) == 0 && fsm_leds(OPEN) == 0 && fsm_leds(STORM_LOCK) == 0, "outputs: no motor LED in the other states");
+    check(fsm_rgb[CLOSED].green == 255 && fsm_rgb[CLOSED].red == 0, "outputs: CLOSED is green");
+    check(fsm_rgb[OPENING].red == 255 && fsm_rgb[OPENING].green == 128, "outputs: OPENING is orange");
+    check(fsm_rgb[OPEN].red == 255 && fsm_rgb[OPEN].green == 0, "outputs: OPEN is red");
+    check(fsm_rgb[CLOSING].red == 255 && fsm_rgb[CLOSING].green == 255, "outputs: CLOSING is yellow");
+    check(fsm_rgb[STORM_LOCK].red == 0 && fsm_rgb[STORM_LOCK].green == 0 && fsm_rgb[STORM_LOCK].blue == 0,
+          "outputs: STORM_LOCK is black");
+    int distinct = 1;
+    for (int a = 0; a < N_STATES; a++) {
+        for (int b = a + 1; b < N_STATES; b++) {
+            if (fsm_rgb[a].red == fsm_rgb[b].red && fsm_rgb[a].green == fsm_rgb[b].green && fsm_rgb[a].blue == fsm_rgb[b].blue) {
+                distinct = 0;
+            }
+        }
+    }
+    check(distinct, "outputs: the five colors are all different (the sheet)");
+}
+
 void test_fsm(void) {
+    test_outputs();
     test_state_names();
     test_status_round_trip();
     test_status_examples();

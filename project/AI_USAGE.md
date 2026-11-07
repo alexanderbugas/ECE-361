@@ -30,6 +30,12 @@
   every silent rule. To check that the tests can fail, Claude broke two
   things in a scratch copy (the wind before the motor in the priority, and
   no storm memory) and confirmed the storm tests caught both.
+- **Steps 10 to 13** (at the user's request): copied `sensor.c` and
+  `scenario.[ch]` unchanged from `hw06/`, wrote the project's `main.c` from
+  HW6's loop with the state machine in place of the toggling, added
+  `fsm_leds` and the color table to `fsm.c`, and the sensor, scenario and
+  clock tests. Ran `./vent` on the sheet's example scenario and on a full
+  open-and-close cycle to check the trace.
 
 ## What it got wrong
 
