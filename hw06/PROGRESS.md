@@ -13,21 +13,22 @@ explain.*
 
 ## Status
 
-| #   | Step                                         | Handout part | Status   |
-| --- | -------------------------------------------- | ------------ | -------- |
-| 1   | `iom361_r4.[ch]`, `Makefile`, `tests/` setup | 4            | not done |
-| 2   | `sensor.h`, `sensor.c`                       | 1            | not done |
-| 3   | `panel.h`, `panel.c`                         | 2            | not done |
-| 4   | `scenario.h`, `scenario.c`, with the clock   | 3            | not done |
-| 5   | `main.c`: `./replay scenario.txt`            | 3            | not done |
-| 6   | `scenarios/`, `expected/`, `regress.sh`      | 4            | not done |
-| 7   | `README.md`, `AI_USAGE.md`                   | deliverables | not done |
+| #   | Step                                         | Handout part | Status       |
+| --- | -------------------------------------------- | ------------ | ------------ |
+| 1   | `iom361_r4.[ch]`, `Makefile`, `tests/` setup | 4            | **complete** |
+| 2   | `sensor.h`, `sensor.c`                       | 1            | **complete** |
+| 3   | `panel.h`, `panel.c`                         | 2            | **complete** |
+| 4   | `scenario.h`, `scenario.c`, with the clock   | 3            | **complete** |
+| 5   | `main.c`: `./replay scenario.txt`            | 3            | **complete** |
+| 6   | `scenarios/`, `expected/`, `regress.sh`      | 4            | **complete** |
+| 7   | `README.md`, `AI_USAGE.md`                   | deliverables | **complete** |
 
 ## The steps
 
 Each step: Claude writes the code and its tests, runs `make test` and shows
 the result, explains every change, and updates this file and the README.
-Nothing is committed. The next step starts only when the user says so.
+Nothing is committed. The steps are done in batches (1–3, 4–5, 6–7), with
+a review after each batch.
 
 ### 1. Setup
 
@@ -74,10 +75,23 @@ Nothing is committed. The next step starts only when the user says so.
   and a held switch; `panel_led` and `panel_toggle` keep the other LEDs.
 - **The handout's example Shine question:** "Why does your `panel_led` read
   the register before it writes it, and what goes wrong if it doesn't?"
-- **Yours, before this step:** what `panel_led` and `panel_toggle` return on
-  success, and when an iom361 read or write fails (0 and the `rc`, as
-  `sensor_read` does, or something else). The handout fixes only −1 for a bad
-  `n`.
+- **Decision H1: what `panel_led` and `panel_toggle` return. Decided by the
+  user: option A.** The
+  handout fixes only −1 for an `n` that is not 0 to 31. Both functions do a
+  read and a write through iom361, and either can fail and set an `rc` (1 bad
+  base, 2 offset out of range, 3 not a multiple of 4, 5 not initialized).
+  - **Option A: the `sensor_read` pattern.** 0 on success; −1 for a bad `n`;
+    otherwise the `rc` of the read or write that failed. If the read fails,
+    nothing is written. Example: `panel_led(base, 2, 1)` before
+    `iom361_initialize` returns 5. The caller can say why it failed, and the
+    three functions that touch registers behave alike.
+  - **Option B: success or failure only.** 0 on success, −1 for a bad `n` or
+    any iom361 failure. Simpler to check, but a caller cannot tell a bad `n`
+    from a broken register.
+  - **Either way:** a failed read must not be followed by a write. A failed
+    `iom361_readReg` returns `0xDEADBEEF`, whose low four bits are `0xF`, so
+    writing it back with one bit changed would light three or all four LEDs.
+
 
 ### 4. `scenario.h` and `scenario.c` (Part 3), with the clock
 
@@ -100,17 +114,43 @@ Nothing is committed. The next step starts only when the user says so.
   sheet's clock tests (the start time prints as given, 59 seconds later,
   one second after 23:59:59 is the next day's 00:00:00, and 28 February 2027
   to 1 March).
-- **Yours, before this step:**
-  - what `scenario_load` takes: a file name, or an open `FILE *`. A
-    `FILE *` lets a test load from a temporary file or a string written to
-    one; a file name keeps `main` shorter;
-  - the shape of the "line in force" function: return a pointer to the line,
-    or copy it into a struct the caller passes in;
-  - what the loader does with a line that has more than the four fields
-    (`%1s` reads 5): count it as wrong, or ignore the extra word;
-  - what happens when the first data line's tick is not 0. There is no line
-    in force yet on ticks before it: either a wrong file, or nothing to
-    replay until then.
+- **Settled: a line with an extra word is wrong.** Slide 29 reads one word
+  more with `%1s`, so 5 fields means "something extra", and says "report the
+  line number of the first bad line". A `#` comment after the four fields is
+  not extra, because it is cut off first.
+- **Decided by the user: a file with no start line at all** (empty, or only
+  comments) makes `scenario_load` return 1.
+- **Settled: a first data line whose tick is not 0 is wrong.** The handout's
+  `main` replays "every tick from 0 to the last one", and every tick needs a
+  line in force. Before the first line there is none.
+- **Decision H2: what `scenario_load` reads from. Decided by the user:
+  option B** (an open `FILE *`), on Claude's suggestion. Either way the name
+  comes from the command line (`./replay scenario.txt`, `argv[1]`); `main`
+  calls `fopen` and reports a file it cannot open. The reason: the handout's
+  `scenario_load` returns only 0 or a line number, and with option A a file
+  that cannot be opened has neither.
+  - **Option A: a file name,** `int scenario_load(scenario_t *sc, const char
+    *path)`. `scenario_load` opens and closes the file itself, and `main` is
+    one call. A test needs a real file: either fixed test files in a folder,
+    or a temporary file the test writes first.
+  - **Option B: an open stream,** `int scenario_load(scenario_t *sc, FILE
+    *in)`. `main` does the `fopen` and `fclose`, and can report "cannot open
+    the file" separately from "line 7 is wrong". A test can write a few lines
+    to a `tmpfile()` and load it, with no files to keep in the folder. This
+    is the way HW4's `tally_print` took its output stream.
+- **Decision H3: how the line in force is handed back. Decided by the user:
+  option B,** "to make it clear to the code reviewer what is going on inside
+  the function". A line is a
+  tick, a temperature, a humidity and the switches.
+  - **Option A: a pointer into the scenario,**
+    `const scenario_line_t *scenario_at(const scenario_t *sc, int tick)`.
+    No copy, and `NULL` can mean "no line in force". The pointer is only good
+    while the `scenario_t` exists. This is how HW3's `find_above` handed back
+    a pointer into the array ([hw03/ptr.h:40](../hw03/ptr.h#L40)).
+  - **Option B: a copy into the caller's struct,**
+    `int scenario_at(const scenario_t *sc, int tick, scenario_line_t *out)`,
+    returning 0, or −1 if no line is in force. The same output-pointer pattern
+    as `sensor_read` and HW3's `minmax`. The caller owns its copy.
 
 ### 5. `main.c` (Part 3)
 
@@ -122,9 +162,20 @@ Nothing is committed. The next step starts only when the user says so.
   registers**, toggles LED k for every switch k just pressed, and prints one
   line:
   `2026-10-06 08:00:02 temp=21.5 rh=40.0 switches=0x1 pressed=0x1 leds=0x1`.
-- **Yours, before this step:** what `main` prints and returns for a bad
-  scenario (for example the line number on `stderr`, exit status 1), and for
-  a failed `sensor_read`.
+- **Settled: a bad scenario stops the run.** Slide 31: "bad count: report
+  line, stop". `main` prints the line number on `stderr` and exits with 1,
+  the way the project's `main.c` already handles a failed
+  `iom361_initialize`. A file that cannot be opened is handled the same way.
+- **Decision H4: what `main` does when `sensor_read` fails mid-run. Decided
+  by the user: option A.**
+  With a correct base this cannot happen in iom361, but the check costs one
+  `if`, and the sheet says to check every `rc`.
+  - **Option A: stop.** Print the tick and the `rc` on `stderr`, exit with 1.
+    No trace line for that tick. The trace then ends early, so a regression
+    test shows the failure as a difference.
+  - **Option B: skip the tick.** Print a warning on `stderr`, print no trace
+    line, and go on with the next tick. The run finishes, but the trace has a
+    gap, and `sensor_read` left the reading as it was the tick before.
 
 ### 6. Regression tests (Part 4)
 

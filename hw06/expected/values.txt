@@ -1,0 +1,7 @@
+2026-10-06 23:59:57 temp=23.5 rh=75.0 switches=0x0 pressed=0x0 leds=0x0
+2026-10-06 23:59:58 temp=23.5 rh=75.0 switches=0x0 pressed=0x0 leds=0x0
+2026-10-06 23:59:59 temp=91.0 rh=40.0 switches=0x0 pressed=0x0 leds=0x0
+2026-10-07 00:00:00 temp=-12.3 rh=100.0 switches=0x4 pressed=0x4 leds=0x4
+2026-10-07 00:00:01 temp=-12.3 rh=100.0 switches=0x4 pressed=0x0 leds=0x4
+2026-10-07 00:00:02 temp=-12.3 rh=100.0 switches=0x4 pressed=0x0 leds=0x4
+2026-10-07 00:00:03 temp=0.0 rh=0.0 switches=0x8 pressed=0x8 leds=0xc

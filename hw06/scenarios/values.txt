@@ -1,0 +1,9 @@
+# values.txt: the sensor and the clock. Values hold between lines, 91.0 C
+# reads back as 91.0, below 0 C rounds correctly, and the date changes at
+# midnight.
+start 1791331197            # 2026-10-06 23:59:57 UTC
+# tick  temp   rh     switches
+0       23.5   75.0   0x0
+2       91.0   40.0   0x0   # the rounding case: the register holds 90.99998
+3       -12.3  100.0  0x4   # below 0 C, 100 %RH, switch 2: LED 2 on
+6       0.0    0.0    0x8   # 0 C and 0 %RH, switch 3 (2 released): LED 3 on

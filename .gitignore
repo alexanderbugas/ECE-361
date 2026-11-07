@@ -13,3 +13,5 @@ hw04/tests/test_tally
 hw05/lock
 hw05/tests/test_lock
 hw05/tests/test_check
+hw06/replay
+hw06/tests/test_hw06
